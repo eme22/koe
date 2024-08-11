@@ -1,41 +1,63 @@
-server: # REST and WS server
-  port: ${PORT}
-  address: 0.0.0.0
+server:
+    address: 0.0.0.0
+    http2:
+        enabled: false
+    port: 34701
 lavalink:
+  plugins:
+    - dependency: com.github.topi314.lavasrc:lavasrc-plugin:4.2.0
+      repository: https://maven.lavalink.dev/releases
+      snapshot: false
+    - dependency: com.dunctebot:skybot-lavalink-plugin:1.7.0
+      repository: https://maven.lavalink.dev/releases
+      snapshot: false
+    - dependency: com.github.topi314.lavalyrics:lavalyrics-plugin:1.0.0
+      repository: https://maven.lavalink.dev/releases
+    - dependency: com.github.devoxin:lavadspx-plugin:0.0.5
+      repository: https://jitpack.io
+    - dependency: dev.lavalink.youtube:youtube-plugin:1.5.2
+      repository: https://maven.lavalink.dev/releases
   server:
-    password: ${PASSWORD}
+    bufferDurationMs: 400
+    filters:
+        channelMix: true
+        distortion: true
+        equalizer: true
+        karaoke: true
+        lowPass: true
+        rotation: true
+        timescale: true
+        tremolo: true
+        vibrato: true
+        volume: true
+    frameBufferDurationMs: 5000
+    gc-warnings: true
+    opusEncodingQuality: 10
+    password: ${PASSWORD:youshallnotpass}
+    playerUpdateInterval: 5
+    resamplingQuality: LOW
+    soundcloudSearchEnabled: true
     sources:
-      youtube: true
       bandcamp: true
+      http: true
+      local: false
+      nico: true
       soundcloud: true
       twitch: true
       vimeo: true
-      http: true
-      local: false
-    bufferDurationMs: 400
-    youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
-    playerUpdateInterval: 5 # How frequently to send player updates to clients, in seconds
-    youtubeSearchEnabled: true
-    soundcloudSearchEnabled: true
-    gc-warnings: true
-    #ratelimit:
-      #ipBlocks: ["1.0.0.0/8", "..."] # list of ip blocks
-      #excludedIps: ["...", "..."] # ips which should be explicit excluded from usage by lavalink
-      #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
-      #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
-      #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
-
+      youtube: false
+      trackStuckThresholdMs: 10000
+      useSeekGhosting: true
+      youtubePlaylistLoadLimit: 6
+      youtubeSearchEnabled: true
 metrics:
   prometheus:
     enabled: false
     endpoint: /metrics
 
 sentry:
-  dsn: ${SENTRY_DSN}
-  environment: ${SENTRY_ENV}
-#  tags:
-#    some_key: some_value
-#    another_key: another_value
+    dsn: ""
+    environment: ""
 
 logging:
   file:
@@ -46,3 +68,61 @@ logging:
   level:
     root: INFO
     lavalink: INFO
+plugins:
+  dunctebot:
+    sources:
+      clypit: true
+      getyarn: true
+      mixcloud: true
+      ocremix: true
+      pornhub: true
+      reddit: true
+      soundgasm: true
+      tiktok: true
+      tts: true
+  ttsLanguage: es-MX
+  lavalyrics:
+    sources:
+      - spotify
+      - youtube
+      - deezer
+      - yandexMusic
+  lavasrc:
+    flowerytts:
+      audioFormat: mp3
+      silence: 0
+      speed: 1
+      translate: false
+      voice: default voice
+    providers:
+      - ytsearch:"%ISRC%"
+      - ytsearch:%QUERY%
+    sources:
+      applemusic: false
+      deezer: false
+      flowerytts: true
+      spotify: true
+      yandexmusic: false
+      youtube: true
+    spotify:
+      albumLoadLimit: 100
+      clientId: ${SPOTIFY_USER}
+      clientSecret: ${SPOTIFY_SECRET}
+      countryCode: US
+      playlistLoadLimit: 100
+    youtube:
+      TVHTML5EMBEDDED:
+        playlistLoading: false
+        searching: false
+        videoLoading: false
+      WEB:
+        playback: false
+      allowDirectPlaylistIds: true
+      allowDirectVideoIds: true
+      allowSearch: true
+      clients:
+        - MUSIC
+        - ANDROID
+        - WEB
+        - TVHTML5EMBEDDED
+      enabled: true
